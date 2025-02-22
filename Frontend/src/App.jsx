@@ -8,6 +8,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useAuthStore } from "./store/useAuthStore";
 import { Loader } from "lucide-react";
+import { Navigate } from "react-router-dom";
 
 const App = () => {
   const { authUser, checkAuth, iscCheckingAuth } = useAuthStore();
