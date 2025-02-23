@@ -1,11 +1,18 @@
-import React, { use, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, MessageSquare, User } from "lucide-react";
-import { Mail } from "lucide-react";
-import { Lock } from "lucide-react";
-import { Loader2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  MessageSquare,
+  User,
+} from "lucide-react";
 import { Link } from "react-router-dom";
+
 import AuthImagePattern from "../components/AuthImagePattern";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,16 +24,32 @@ const SignUpPage = () => {
 
   const { signup, isSigningUp } = useAuthStore();
 
-  const validateForm = () => {};
+  const validateForm = () => {
+    if (!formData.fullname.trim()) return toast.error("Full name is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const success = validateForm();
+
+    if (success === true) signup(formData);
   };
+
   return (
-    <div className="min-h-screen grid lg: grid-cols-2">
-      {/* Left Side */}
-      <div className="flex  flex-col justify-center items-center p-6 sm:p-12">
-        <div className=" w-full max-w-md space-y-8">
-          {/* Logo */}
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* left side */}
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          {/* LOGO */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
@@ -41,7 +64,8 @@ const SignUpPage = () => {
               </p>
             </div>
           </div>
-          <form action={handleSubmit} className="space-y-6">
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Full Name</span>
@@ -54,13 +78,14 @@ const SignUpPage = () => {
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
-                  value={formData.fullName}
+                  value={formData.fullname}
                   onChange={(e) =>
-                    setFormData({ ...formData, fullName: e.target.value })
+                    setFormData({ ...formData, fullname: e.target.value })
                   }
                 />
               </div>
             </div>
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Email</span>
@@ -80,6 +105,7 @@ const SignUpPage = () => {
                 />
               </div>
             </div>
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Password</span>
@@ -110,6 +136,7 @@ const SignUpPage = () => {
                 </button>
               </div>
             </div>
+
             <button
               type="submit"
               className="btn btn-primary w-full"
@@ -125,6 +152,7 @@ const SignUpPage = () => {
               )}
             </button>
           </form>
+
           <div className="text-center">
             <p className="text-base-content/60">
               Already have an account?{" "}
@@ -135,7 +163,9 @@ const SignUpPage = () => {
           </div>
         </div>
       </div>
-      {/* Right Side */}
+
+      {/* right side */}
+
       <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
@@ -143,5 +173,4 @@ const SignUpPage = () => {
     </div>
   );
 };
-
 export default SignUpPage;
