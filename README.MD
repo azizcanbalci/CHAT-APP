@@ -26,7 +26,6 @@ CHAT-APP, gerçek zamanlı iletişim ihtiyaçlarını karşılamak üzere geliş
 **Frontend:**
 
 - React.js
-- Redux
 - TailwindCSS & Daisy UI
 
 **Backend:**
